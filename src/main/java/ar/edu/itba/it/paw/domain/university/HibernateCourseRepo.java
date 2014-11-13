@@ -32,4 +32,8 @@ public class HibernateCourseRepo extends AbstractHibernateRepo implements Course
 		return this.find("select distinct c from Course c inner join c.students where ? not member of c.students", student);
 	}
 	
+	public List<Activity> activityLog(Course course) {
+		return this.find("from Activity a where a.course = ? order by desc",course);
+	}
+	
 }

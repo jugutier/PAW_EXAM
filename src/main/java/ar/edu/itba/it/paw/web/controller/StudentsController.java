@@ -1,5 +1,7 @@
 package ar.edu.itba.it.paw.web.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -14,6 +16,8 @@ import ar.edu.itba.it.paw.domain.university.CourseFullException;
 import ar.edu.itba.it.paw.domain.university.CourseRepo;
 import ar.edu.itba.it.paw.domain.university.Student;
 import ar.edu.itba.it.paw.domain.university.StudentRepo;
+import ar.edu.itba.it.paw.domain.users.User;
+import ar.edu.itba.it.paw.domain.users.UserRepo;
 import ar.edu.itba.it.paw.web.forms.EnrollForm;
 import ar.edu.itba.it.paw.web.validator.EnrollFormValidator;
 
@@ -22,13 +26,15 @@ public class StudentsController {
 	
 	private StudentRepo students;
 	private CourseRepo courses;
+	private UserRepo users;
 	private EnrollFormValidator validator;
 	
 	@Autowired
-	public StudentsController(StudentRepo studentRepo, CourseRepo courseRepo,EnrollFormValidator validator) {
+	public StudentsController(StudentRepo studentRepo, CourseRepo courseRepo,UserRepo userRepo,EnrollFormValidator validator) {
 		this.students = studentRepo;
 		this.courses = courseRepo;
 		this.validator=validator;
+		this.users = userRepo;
 	}
 	
 	@RequestMapping
@@ -48,7 +54,7 @@ public class StudentsController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView enroll(EnrollForm form, Errors errors) {		
+	public ModelAndView enroll(EnrollForm form, Errors errors, HttpSession session) {		
 		validator.validate(form,errors);
 		//EX 4:without this, theres an error when matriculating on an empty subject
 		
@@ -57,8 +63,9 @@ public class StudentsController {
 		}
 		Student student = form.getStudent();
 		Course course = form.getCourse();
+		User currentUser = users.get(Integer.valueOf((String) session.getAttribute("userId")));
 		try {
-			course.enroll(student);
+			course.enroll(student,currentUser);
 		} catch (CourseFullException e) {
 			errors.reject("course.full");
 			return profile(form.getStudent());//EX 5
@@ -75,8 +82,9 @@ public class StudentsController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView unenroll(@RequestParam Student student, @RequestParam Course course) {
-		course.unenroll(student);//EX 2: same here
+	public ModelAndView unenroll(@RequestParam Student student, @RequestParam Course course, HttpSession session) {
+		User currentUser = users.get(Integer.valueOf((String) session.getAttribute("userId")));
+		course.unenroll(student,currentUser);//EX 2: same here
 		/*if (course.getStudents().remove(student)) {
 			course.setEnrolledStudents(course.getEnrolledStudents() - 1);
 		}*/
