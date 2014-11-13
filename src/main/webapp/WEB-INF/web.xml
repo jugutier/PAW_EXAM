@@ -13,20 +13,9 @@
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/bin/*</url-pattern>
 	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>homeRedirectServlet</servlet-name>
-		<servlet-class>ar.edu.itba.it.paw.web.HomeRedirectServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>homeRedirectServlet</servlet-name>
-		<url-pattern>/index.html</url-pattern>
-	</servlet-mapping>
-	
+		
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>home/home</welcome-file>
 	</welcome-file-list>
 	
 	<filter>
