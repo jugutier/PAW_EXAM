@@ -35,5 +35,12 @@ public class Student extends PersistentEntity {
 	public Set<Course> getCourses() {
 		return courses;
 	}
+	void enroll(Course c){//EX 2
+		courses.add(c);
+	}
+
+	void unenroll(Course course) {//EX 2
+		courses.remove(course);
+	}
 
 }

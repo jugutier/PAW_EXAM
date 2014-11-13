@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.it.paw.domain.users.User;
 import ar.edu.itba.it.paw.domain.users.UserRepo;
 import ar.edu.itba.it.paw.web.forms.LoginForm;
 import ar.edu.itba.it.paw.web.validator.LoginFormValidator;
@@ -40,7 +41,14 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public String login(LoginForm form, Errors errors, HttpSession session) {
-		validator.validate(form, errors);
+		validator.validate(form, errors);//only check empty fields or invalid emails
+		
+		
+		User user = users.get(form.getEmail());
+		if (user == null || !user.matchPassword(form.getPassword())) { 
+			errors.reject("user.invalid");
+		}
+		
 		if (errors.hasErrors()) {
 			return null;
 		}

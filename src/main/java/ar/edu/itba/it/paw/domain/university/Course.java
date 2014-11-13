@@ -20,6 +20,18 @@ public class Course extends PersistentEntity {
 	private String name;
 	
 	private int enrolledStudents;
+
+	private  int MAX_STUDENTS;
+	Course(){}//needed for hibernate
+	
+	public Course(String code, String name, int max_students) {//EX 5
+		if(max_students<=0){
+			throw new IllegalArgumentException("A course must have at least one student.");
+		}
+		this.code=code;
+		this.name=name;
+		this.MAX_STUDENTS=max_students;
+	}
 	
 	public Set<Student> getStudents() {
 		return students;
@@ -33,11 +45,26 @@ public class Course extends PersistentEntity {
 		return name;
 	}
 	
-	public int getEnrolledStudents() {
+	public int getEnrolledStudents() {// EX 2
 		return enrolledStudents;
 	}
 	
-	public void setEnrolledStudents(int enrolledStudents) {
+	/*public*/ void setEnrolledStudents(int enrolledStudents) {//requed for hibernate to set the private variable
 		this.enrolledStudents = enrolledStudents;
+	}
+
+	public void enroll(Student student) throws CourseFullException {//EX 4
+		if(enrolledStudents == MAX_STUDENTS){//EX 5
+			throw new CourseFullException();
+		}
+		students.add(student);
+		enrolledStudents++;
+		student.enroll(this);
+	}
+
+	public void unenroll(Student student) {
+		students.remove(student);
+		enrolledStudents--;
+		student.unenroll(this);
 	}
 }

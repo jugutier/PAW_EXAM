@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.it.paw.domain.common.AbstractHibernateRepo;
-import ar.edu.itba.it.paw.web.forms.LoginForm;
 
 @Repository
 public class HibernateUserRepo extends AbstractHibernateRepo implements UserRepo {
@@ -38,12 +37,12 @@ public class HibernateUserRepo extends AbstractHibernateRepo implements UserRepo
 		return users.get(0);
 	}
 	
-	@Override
+	/*@Override
 	public boolean checkLogin(LoginForm form) {
 		User user = get(form.getEmail());
 		if (user == null) { 
 			return false;
 		}
 		return user.matchPassword(form.getPassword());
-	}
+	}*/
 }
