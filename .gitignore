@@ -7,3 +7,4 @@ release.properties
 .classpath
 *.swp
 .settings/*
+.project
